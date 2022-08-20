@@ -19,5 +19,41 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
+  feeds    Feed[]
+  comments Comment[]
+
   @@map("users")
+}
+
+// users 1 ---> * feeds 
+// users 1 ---> * comments 
+
+model Feed {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id])
+  title       String   @db.VarChar(255)
+  description String   @db.Text
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  comments Comment[]
+
+  @@map("feeds")
+}
+
+// feeds 1 ---> * comments 
+
+model Comment {
+  id           Int      @id @default(autoincrement())
+  user_id      Int
+  user         User     @relation(fields: [user_id], references: [id])
+  feed_id      Int
+  feed         Feed     @relation(fields: [feed_id], references: [id])
+  text         String   @db.Text
+  is_confirmed Boolean  @default(false) @db.TinyInt
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@map("comments")
 }
