@@ -1,4 +1,4 @@
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '@app/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFeedDto } from './dto/create-feed.dto';
 import { UpdateFeedDto } from './dto/update-feed.dto';
@@ -7,7 +7,7 @@ import { UpdateFeedDto } from './dto/update-feed.dto';
 export class FeedsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async list() {
+  async list(take: string, skip: string) {
     return await this.prisma.feed.findMany({
       orderBy: {
         created_at: 'desc',
@@ -38,6 +38,8 @@ export class FeedsService {
           },
         },
       },
+      take: Number(take),
+      skip: Number(skip),
     });
   }
 

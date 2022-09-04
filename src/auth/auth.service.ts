@@ -1,9 +1,8 @@
 import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma.service';
 import { RegisterDto } from './dto/register.dto';
-
 import * as bcrypt from 'bcrypt';
+import { PrismaService } from '@app/shared';
 
 @Injectable()
 export class AuthService {

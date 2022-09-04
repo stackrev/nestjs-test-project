@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -19,9 +20,9 @@ export class FeedsController {
   constructor(private readonly service: FeedsService) {}
 
   @Get('/')
-  async list() {
+  async list(@Query('take') take: string, @Query('skip') skip: string) {
     return {
-      feeds: await this.service.list(),
+      feeds: await this.service.list(take || '15', skip || '0'),
     };
   }
 
