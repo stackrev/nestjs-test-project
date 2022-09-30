@@ -1,3 +1,8 @@
+import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { CommentsService } from './comments.service';
+import { CreateCommentDto } from './dto/create-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 import {
   Body,
   Controller,
@@ -9,16 +14,14 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { CommentsService } from './comments.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
 
+@ApiTags('Comments')
 @Controller('comments')
 export class CommentsController {
   constructor(private readonly service: CommentsService) {}
 
   @Get('/:feedId/feed')
+  @ApiOperation({ summary: 'Get list of feed comments data' })
   async list(@Param('feedId') feedId: string) {
     return {
       comments: await this.service.list(feedId),
@@ -26,6 +29,8 @@ export class CommentsController {
   }
 
   @Post('/:feedId/feed')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create comment Api summary' })
   @UseGuards(AuthGuard('jwt'))
   async create(
     @Param('feedId') feedId: string,
@@ -38,6 +43,8 @@ export class CommentsController {
   }
 
   @Put('/:commentId/update')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update comment Api summary' })
   @UseGuards(AuthGuard('jwt'))
   async update(
     @Param('commentId') commentId: string,
@@ -48,6 +55,8 @@ export class CommentsController {
   }
 
   @Delete('/:commentId/delete')
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete comment Api summary' })
   @UseGuards(AuthGuard('jwt'))
   async delete(@Param('commentId') commentId: string, @Request() req) {
     await this.service.delete(commentId, req.user);
