@@ -19,16 +19,15 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  feeds     Feed[]
-  comments  Comment[]
-  likes     Like[]
-  favorites Favorite[]
+  feeds      Feed[]
+  comments   Comment[]
+  likes      Like[]
+  favorites  Favorite[]
+  followers  Follow[]   @relation("follower")
+  followings Follow[]   @relation("following")
 
   @@map("users")
 }
-
-// users 1 ---> * feeds 
-// users 1 ---> * comments 
 
 model Feed {
   id          Int      @id @default(autoincrement())
@@ -45,8 +44,6 @@ model Feed {
 
   @@map("feeds")
 }
-
-// feeds 1 ---> * comments 
 
 model Comment {
   id           Int      @id @default(autoincrement())
@@ -80,4 +77,14 @@ model Favorite {
   feed    Feed @relation(fields: [feed_id], references: [id])
 
   @@map("favorites")
+}
+
+model Follow {
+  id           Int  @id @default(autoincrement())
+  follower_id  Int
+  follower     User @relation(name: "follower", fields: [follower_id], references: [id])
+  following_id Int
+  following    User @relation(name: "following", fields: [following_id], references: [id])
+
+  @@map("follows")
 }
