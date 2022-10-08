@@ -37,6 +37,12 @@ export class FeedsService {
             },
           },
         },
+        likes: {
+          select: {
+            id: true,
+            user: true,
+          },
+        },
       },
       take: Number(take),
       skip: Number(skip),
